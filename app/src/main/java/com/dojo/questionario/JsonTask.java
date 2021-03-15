@@ -3,6 +3,10 @@ package com.dojo.questionario;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +16,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class JsonTask extends AsyncTask<String, String, String> {
+
+    JSONObject listaJson ;
+    String txtTitulo ;
+    JSONArray questionario;
 
     protected void onPreExecute() {
         super.onPreExecute();
@@ -34,7 +42,7 @@ public class JsonTask extends AsyncTask<String, String, String> {
             String line = "";
 
             while ((line = reader.readLine()) != null) {
-                buffer.append(line+"\n");
+                buffer.append(line + "\n");
                 Log.d("Response: ", "> " + line);
             }
             return buffer.toString();
@@ -61,6 +69,26 @@ public class JsonTask extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        Log.i("meuLog",""+result);
+
+        Log.i("meuLog", "" + result);
+
+        try{
+            listaJson = new JSONObject(result);
+            txtTitulo = listaJson.getString("titulo");
+            questionario = listaJson.getJSONArray("questionario");
+
+            for(int i=0 ; i<questionario.length() ; i++){
+                JSONObject questao = questionario.getJSONObject(i);
+                Log.i("meuLog",""+questao.getString("Pergunta"));
+                Log.i("meuLog",""+questao.getString("respA"));
+                Log.i("meuLog",""+questao.getString("respB"));
+                Log.i("meuLog",""+questao.getString("respC"));
+                Log.i("meuLog",""+questao.getInt("correta"));
+
+            }
+
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
     }
 }
