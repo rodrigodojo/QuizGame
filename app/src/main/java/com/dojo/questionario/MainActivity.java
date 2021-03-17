@@ -268,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
         alerta.setCancelable(false);
         alerta.create();
         alerta.show();
+
     }
 
     public class Questao {
